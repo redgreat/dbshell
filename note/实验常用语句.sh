@@ -61,6 +61,11 @@ curl https://registry.hub.docker.com/v1/repositories/elasticsearch/tags| tr -d '
 docker volume ls
 docker volume inspect
 
+#启动镜像
+docker-compose up -d
+#关闭
+docker-compose down
+
 #安装jdk
 
 wget https://repo.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz
@@ -132,7 +137,6 @@ passwd hauser
 /sbin/usermod -aG sudo hauser
 # 切换用户
 su -l hauser
-
 
 ## v2Ray 操作指令
 v2ray info 查看 V2Ray 配置信息

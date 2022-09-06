@@ -94,7 +94,7 @@ fun_rsync() {
 }
 
 fun_oss(){
-    oss=$(curl -s http://fc.domain.com/upload2oss) #获取签名的json
+    #oss=$(curl -s http://fc.domain.com/upload2oss) #获取签名的json
     #echo $oss | python -m json.tool
     oss_startTime=`date +%s.%N`
     oss_dir=`echo $oss | jq .data.dir | sed \s/\"//g`
