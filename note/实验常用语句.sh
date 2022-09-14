@@ -20,6 +20,10 @@ curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 systemctl start docker
 #查看docker内容器
 docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.Status}}"
+#查询镜像
+docker search mongo
+#查看镜像版本
+curl https://registry.hub.docker.com/v1/repositories/${docker_img}/tags | python3 -m json.tool | more
 #查看版本/基本信息
 docker -v
 docker info
@@ -155,3 +159,11 @@ v2ray log 查看 V2Ray 运行日志
 v2ray update 更新 V2Ray
 v2ray update.sh 更新 V2Ray 管理脚本
 v2ray uninstall 卸载 V2Ray
+
+9ecd7f1ac0b7a1fef65e6b2148696918a1e13d38
++ixGlHpUN+Ah0TOAKosGUeD+etNvdtQ/mUg7BodkQQo=
+
+
+https://picwong.compat.objectstorage.ap-seoul-1.oraclecloud.com
+
+https://www.wongcw.cn/picwong/
