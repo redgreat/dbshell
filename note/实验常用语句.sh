@@ -1,6 +1,6 @@
 #端口号查询
 
-lsof -nP -iTCP -sTCP:LISTEN
+lsof -nP -iTCP -sTCP:LISTEN 
 
 #linux下获取占用CPU资源最多的10个进程，可以使用如下命令组合：
 
@@ -49,6 +49,8 @@ docker rm doris-014
 docker attach doris-014
 #连接容器(正在运行)
 docker exec -it 容器ID /bin/bash
+## alpine linux
+docker exec -it 容器ID /bin/sh
 #退出（默认直接关闭）
 exit
 #删除所有容器
@@ -65,10 +67,62 @@ curl https://registry.hub.docker.com/v1/repositories/elasticsearch/tags| tr -d '
 docker volume ls
 docker volume inspect
 
+#查看volumes目录大小
+du -sh /var/lib/docker/volumes/
+#清理volumes目录下不同的volume
+docker volume ls -f dangling=true | awk '{ print $2 }' | xargs docker volume rm
+
+#查看清理后的volumes目录大小
+#/var/lib/docker/tmp清理
+#有一次制作镜像，一口气后台制作8个镜像，结果，tmp目录瞬间涨到12G。虚机硬盘分配的空间不大，导致了磁盘爆满，还好能直接删除tmp目录下所有的文件目录。
+
+#容器清理
+sudo docker ps --filter status=dead --filter status=exited -aq | xargs -r sudo docker rm -v
+
+#镜像清理
+sudo docker images --no-trunc | grep '<none>' | awk '{ print $3 }' | xargs -r sudo docker rmi
+#查看所有docker存储卷
+sudo docker system df
+docker system prune
+docker system prune -a
+
+#删除所有关闭的容器：
+docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
+
+#删除所有dangling镜像（即无tag的镜像）：
+docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+
+#删除所有dangling数据卷（即无用的Volume）：
+docker volume rm $(docker volume ls -qf dangling=true)
+
+#docker镜像自动更新
+docker pull containrrr/watchtower
+$ docker run -d \
+ --name watchtower \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ containrrr/watchtower \
+ --cleanup \
+ --schedule "0 0 4 * * *" \
+ --include-restarting
+  
+#查看docker日志
+docker logs --tail=1000 容器名称
+docker-compose -f docker-compose-app.yml logs -f
+docker compose -f docker-compose.yml logs -f
+
 #启动镜像
 docker-compose up -d
 #关闭
 docker-compose down
+
+# 关闭原有服务
+docker compose down
+# 删除原有镜像
+docker rmi mereith/van-blog:latest
+# 重新拉取最新镜像
+docker pull mereith/van-blog:latest
+# 重新启动服务
+docker compose up -d
 
 #安装jdk
 
@@ -126,7 +180,6 @@ apt update && apt dist-upgrade     #更新软件，可不执行
 sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js && systemctl restart pveproxy.service
 # 执行完成后，浏览器Ctrl+F5强制刷新缓存
 
-
 # 新建用户组
 groupadd hauser
 # 新建用户并加入用户组  
@@ -162,8 +215,4 @@ v2ray uninstall 卸载 V2Ray
 
 9ecd7f1ac0b7a1fef65e6b2148696918a1e13d38
 +ixGlHpUN+Ah0TOAKosGUeD+etNvdtQ/mUg7BodkQQo=
-
-
-https://picwong.compat.objectstorage.ap-seoul-1.oraclecloud.com
-
-https://www.wongcw.cn/picwong/
+9**
